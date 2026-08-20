@@ -50,6 +50,9 @@ function App() {
     window.addEventListener('message', handleMessage)
     document.addEventListener('message', handleDocumentMessage)
 
+    // Notificar a React Native que la web está lista para recibir datos
+    sendToNative('WEB_READY', {})
+
     return () => {
       window.removeEventListener('message', handleMessage)
       document.removeEventListener('message', handleDocumentMessage)
