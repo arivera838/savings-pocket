@@ -41,3 +41,13 @@ Para solucionar la comunicación entre capas, implementamos el **Adapter Pattern
 
 **¿Por qué este patrón?**
 Permite que el equipo web itere el diseño y los estilos interactivos del detalle de la meta (desplegando independientemente actualizaciones de UI) sin necesidad de requerir un nuevo release binario (App Store / Play Store) de la aplicación React Native principal.
+
+
+LIBRARY
+
+
+### Criterios de Ingeniería y Decisiones de Diseño
+
+1. **TurboModules & JSI vs Bridge Tradicional**: Se justificó el uso de la nueva arquitectura (JSI) porque las validaciones de moneda, el feedback háptico y los toasts nativos requieren una respuesta en tiempo real (60fps). El antiguo *Bridge* asíncrono serializa mensajes en JSON, lo cual introduce latencia al teclear o presionar botones.
+2. **Librería Pequeña y Específica ("Suma valor una librería pequeña...")**: En lugar de sobrecargar la aplicación con una librería monolítica de UI, esta librería tiene un *footprint* mínimo y una única responsabilidad: gestionar depósitos conectando JS con APIs del Sistema Operativo de forma segura y veloz. Esto la hace muy fácil de probar, empaquetar e integrar.
+3. **APIs Flexibles (Componente vs Hooks/Métodos)**: Al exponer tanto un componente "Drop-in" (`<DepositInput />`) como los métodos crudos (`triggerHapticFeedback`, `scheduleLocalNotification`), la librería se adapta al patrón de integración del consumidor. Si la app delega la UI al WebView (como es nuestro caso), puede simplemente usar los métodos nativos en el puente. Si la app decide renderizar UI nativa, utiliza el componente.
